@@ -83,3 +83,35 @@ yr = Ar \ br
 Aj =  get_Legendre_matrix(jdis,deg)
 bj = map(js -> solve_ode(js[2],js[1])[end], jdis.samples)
 Aj\bj
+
+bj_v = map(i-> map(js -> solve_ode(js[2],js[1])[i], jdis.samples),1:1:101)
+
+yj = map(bji-> Aj\bji, bj_v)
+σj = map(yi->compute_σ(yi, deg),yj)
+
+plot(timev,X, grid=false,ribbon=σj,fillalpha=.5)
+
+
+
+
+function compute_σ(y, deg)
+    pvector = 1:deg
+    xl = collect(-1:0.0001:1) #quadrature interval
+    Φ2 = map(degi -> trapz(xl, Pl.(xl, degi) .^ 2) ./ 2, pvector)
+    yi = y[2:end]
+    return sum(Φ2 .* yi)
+end
+
+
+#LHP
+using LatinHypercubeSampling, QuadGK, Cuba, HCubature
+plan, _ = LHCoptim(100,2,1000)
+scaled_plan = scaleLHC(plan,[(-5.0,5.0),(-5.0,5.0)])
+scatter(scaled_plan[:,1], scaled_plan[:,2])
+
+i,e = hcubature(x -> cos(x[1]) * sin(x[2]), [1.0, 1.1], [2.0, 3.0])
+
+f(x) = (Pl(x[1], 0) * Pl(x[2], 0))^2 /4
+hcubature(f, [-1.0, -1.0], [1.0, 1.0])
+
+hcubature(x-> cos(x[1]), [0.0:0.1: 1.0])

@@ -1,7 +1,7 @@
 # module LegendreMultivariate
 using Plots, Statistics, PolyChaos, Distributions, LegendrePolynomials
 using IterativeSolvers, Trapz, Preconditioners
-
+using LatinHypercubeSampling, QuadGK
 
 
 
