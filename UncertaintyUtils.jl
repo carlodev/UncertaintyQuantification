@@ -1,5 +1,7 @@
 using PolyChaos, SparseArrays, Combinatorics
 
+using Statistics, Trapz,HCubature, Plots, LinearAlgebra
+
 
 
 function compute_Sobolov_index(v::Vector, t2::Tensor, Di::Vector)
